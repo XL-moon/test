@@ -2,6 +2,6 @@ Java技术
 ====
 基本算法
 ----
-* sdhg<br>
-  * cbsdhb
+```java<br>
+public static void main ()
 
