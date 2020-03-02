@@ -1,6 +1,6 @@
-Java技术
+Java基础算法
 ====
-基本算法
+排序算法
 ----
 ```java<br>
 public static void main ()
