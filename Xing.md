@@ -55,9 +55,10 @@ public class Solution{
 		}
 	}
 	/**
+```
 
 ### 2.快速排序
-
+```java<br>
 	 * 快速排序
 	 * @param num
 	 * @param left
@@ -92,8 +93,9 @@ public class Solution{
         quickSort(num, i + 1, right);
     }
 
+```
 ### 3.直接插入排序
-
+```java<br>
 	 * 直接插入排序算法
 	 * @param num
 	 */
@@ -110,8 +112,9 @@ public class Solution{
 		}
 	}
 	/**
+```
 ### 4.希尔排序
-
+```java<br>
 	 * 希尔排序，分组的直接插入排序
 	 * 多加了一成循环，增量d的初始值为数组长度的一半
 	 * @param num
@@ -130,9 +133,9 @@ public class Solution{
 			}
 		}
 	}
-
+```
 ### 5.折半插入排序
-
+```java<br>
 	 * 折半插入排序:
 	 * left = 0;
 	 * right = i-1; 目标是将第i个元素插入到前面的某个位置，所以right为i-1
@@ -161,9 +164,9 @@ public class Solution{
 				num[left] = temp;  // 将num[i]放在指定位置
 		}
 	}
-
+```
 ### 6.选择排序
-
+```java<br>
 	 * 选择排序：外层循环控制着趟数，每趟的num[i]我们认为是最小值
 	 * @param num
 	 */
@@ -182,9 +185,9 @@ public class Solution{
 			}
 		}
 	}
-
+```
 ### 7.堆排序
-
+```java<br>
 	 * 堆排序：
 	 * 1、构建大顶堆
 	 * 2、交换堆顶和末尾元素
@@ -243,9 +246,9 @@ public class Solution{
 		}
 		num[s] = temp; // 将temp放在指定位置
 	}
-	
+```
 ### 8.归并排序
-
+```java<br>
 	 * 归并排序：
 	 * 将两个（或两个以上）有序表合并成一个新的有序表 即把待排序序列分为若干个子序列， 
      *     每个子序列是有序的。然后再把有序子序列合并为整体有序序列  
@@ -291,10 +294,10 @@ public class Solution{
 			num[k2+left] = temp[k2];
 		}
 	}
-
+```
 ### 9.二分查找算法
 #### (1)基于循环的二分查找算法
-
+```java<br>
 	 * 基于循环的二分查找实现算法
 	 * @param num
 	 * @param target
@@ -317,9 +320,9 @@ public class Solution{
 		}
 		return -1;
 	}
-
+```
 #### (2)基于递归的二分查找算法
-
+```java<br>
 	 * 基于递归实现的二分查找算法
 	 * @param num
 	 * @param left
@@ -343,5 +346,5 @@ public class Solution{
 		return -1;
 	}
 }
-
+```
 
