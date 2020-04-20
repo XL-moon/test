@@ -196,8 +196,8 @@ class TreeNode {
 ### 二叉树举例
 ```java<br>
 面试中，对分层遍历二叉树考察最多。举例如下，针对如下所示的二叉树。
-
 ```
+![](http://www.baidu.com/img/bdlogo.gif) 
 ```java<br>
 ```
 
