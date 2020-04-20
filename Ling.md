@@ -1,5 +1,4 @@
 
-# 面试中算法总结
 ## 1.单链表相关算法
 ### 单链表定义
 ```java<br>
@@ -138,6 +137,10 @@ class Node{
      }
 }
 ```
+##### (1)运行结果
+```java<br>
+7
+```
 #### (2)单链表反转：遍历和递归
 ```java<br>
 package com.lianbiao.test;
@@ -241,6 +244,11 @@ class Node{
      }
 }
 ```
+##### (2)运行结果
+```java<br>
+3 5 6 9 7 2 1
+1 2 7 9 6 5 3 
+```
 #### (3)从尾到头打印链表：遍历和递归
 ```java<br>
 package com.lianbiao.test;
@@ -320,6 +328,11 @@ class Node{
      }
 }
 
+```
+##### (3)运行结果
+```java<br>
+3 5 6 9 7 2 1
+1 2 7 9 6 5 3
 ```
 #### (4)查找单链表中的倒数第K个结点（k > 0）: reGetKthNode
 ```java<br>
@@ -435,6 +448,12 @@ class Node{
 }
 
 ```
+##### (4)运行结果
+```java<br>
+3 5 6 9 7 2 1
+7
+2
+```
 #### (5)查找单链表的中间结点
 ```java<br>
 package com.lianbiao.test;
@@ -503,6 +522,11 @@ class Node{
           this.next=null;
      }
 }
+```
+##### (5)运行结果
+```java<br>
+3 5 6 9 7 2 1
+9
 ```
 #### (6)合并有序单链表
 ```java<br>
@@ -576,6 +600,10 @@ class Node{
 	}
 }
 
+```
+##### (6)运行结果
+```java<br>
+1 2 3 3 5 6 9
 ```
 #### (7)判断两个链表是否相交
 ```java<br>
@@ -653,6 +681,12 @@ class Node{
 		this.next=null;
 	}
 }
+```
+##### (7)运行结果
+```java<br>
+1 2 3 6 9
+3 5 6 9
+ture
 ```
 #### (8)两个单链表相交的第一个节点
 ```java<br>
@@ -769,6 +803,12 @@ class Node{
 	}
 }
 ```
+##### (8)运行结果
+```java<br>
+1 2 3 6 9
+3 5 6 9
+6
+```
 #### (9)判断链表中是否有环
 ```java<br>
 
@@ -835,6 +875,10 @@ class Node{
 		this.next=null;
 	}
 }
+```
+##### (9)运行结果
+```java<br>
+ture
 ```
 #### (10)链表中环中的第一个节点
 ```java<br>
@@ -940,6 +984,10 @@ class Node{
 	}
 }
 ```
+##### (10)运行结果
+```java<br>
+7
+```
 #### (11)给出一单链表头指针pHead和一节点指针pToBeDeleted，O(1)时间复杂度删除节点pToBeDeleted: delete
 ```java<br>
 package com.lianbiao.test;
@@ -1015,4 +1063,9 @@ class Node{
 		this.next=null;
 	}
 }
+```
+##### (11)运行结果
+```java<br>
+3 5 6 9 7 2 1 
+3 5 6 7 2 1 
 ```
