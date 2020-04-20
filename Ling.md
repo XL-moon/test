@@ -1,5 +1,5 @@
 
-## 1.单链表相关算法
+## 单链表相关算法
 ### 单链表定义
 ```java<br>
 常见的链表题有：单链表反转、合并有序单链表、求单链表的中间节点、判断单链表相交或者有环、求出进入环的第一个节点、求单链表相交的第一个节点等。
@@ -1069,3 +1069,89 @@ class Node{
 3 5 6 9 7 2 1 
 3 5 6 7 2 1 
 ```
+## 多种单链表反转面试题总结
+```java<br>
+总结下面试题中常见的单链表反转：
+1.常规的反转单链表
+2.以K个为一组反转单链表，最后不足K个节点的部分也反转
+3.以K个为一组反转单链表，最后不足K个节点的部分不反转
+```
+### 1.反转单链表
+```java<br>
+代码如下：
+
+/*
+     *  翻转链表（遍历） 
+     *  从头到尾遍历原链表，每遍历一个结点，
+     *  将其摘下放在新链表的最前端。
+     *  注意链表为空和只有一个结点的情况。时间复杂度为O（n）
+     */
+    public static ListNode reverseNode(ListNode head){
+         // 如果链表为空或只有一个节点，无需反转，直接返回原链表表头
+         if(head == null || head.next == null)
+             return head;
+         
+         ListNode reHead = null;
+         ListNode cur = head;
+         while(cur!=null){
+             ListNode reCur = cur;      // 用reCur保存住对要处理节点的引用
+             cur = cur.next;        // cur更新到下一个节点
+             reCur.next = reHead;   // 更新要处理节点的next引用
+             reHead = reCur;        // reHead指向要处理节点的前一个节点
+         }
+         return reHead;
+    }
+```
+### 2.以K个为一组反转单链表，最后不足K个节点的部分也反转
+#### 代码
+```java<br>
+/**
+	 * 分组反转单链表，最后不足K个节点的部分也反转
+	 * @param head
+	 * @param k
+	 * @return
+	 */
+	public static ListNode reverseKgroup(ListNode head, int k) {
+		if (head == null)
+			return head;
+		ListNode cur = head;
+		ListNode reHead = null;
+ 
+		int count = 0;
+		/* Reverse first k nodes of linked list */
+		while (count < k && cur != null) {
+			ListNode reCur = cur;
+			cur = cur.next;
+			reCur.next = reHead;
+			reHead = reCur;
+			count++;
+		}
+		/*
+		 * cur is now a pointer to (k+1)th node Recursively call for the
+		 * list starting from current. And make rest of the list as next of
+		 * first node
+		 */
+		if (cur != null)
+			head.next = reverseKgroup(cur, k);
+		
+		return reHead;
+	}
+	
+```
+#### 举例解释
+```java<br>
+举例解释：
+
+输入的原始单链表为3-5-6-9-7-2-1-12，其中K为3；
+
+经过第一次while循环，单链表变为6-5-3-9-7-2-1-12。此时跳出while循环是因为count<k不成立了，cur节点指向了9，head节点指向了3。所以接着判断cur是否为null，若不是，则刚好递归求出head.next。
+
+经过第二次while循环，单链表为6-5-3-2-7-9-1-12。此时跳出while循环是因为count<k不成立了，cur节点指向了1，head节点指向了9。接着判断cur，并且递归求head.next节点。
+
+第三次循环，跳出while是因为cur==null了，直接返回reHead，此时reHead指向了12。
+
+可以看出，K个为一组反转单链表，核心代码还是常规的如何反转单链表。
+
+```
+#### 
+```java<br>
