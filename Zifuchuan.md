@@ -261,8 +261,74 @@ public class Main {
 打开tag瞅瞅，如下：
 ```
 `插入图片11`
-
+```java<br>
 于是我们使用了HashMap和双指针来解决该问题。
 思路：HashMap中不断更新维护每个字符出现的位置。使用count变量进行计数，当统计的最长子字符串被重复字符破坏时，比较count和max的大小，判断是否需要更新max变量。
 总结：不管是哪种情况，每次都需要更新map中的信息，并且需要更新count变量
+```
+##### 代码
 ```java<br>
+java实现如下：
+
+package pak3;
+ 
+import java.util.HashMap;
+import java.util.Map;
+ 
+/**
+ * 3. Longest Substring Without Repeating Characters
+ * 求最长不含重复字符的子字符串
+ * @author ywq
+ *
+ *
+ */
+public class Main {
+	public static void main(String[] args) {
+		System.out.println(lengthOfLongestSubstring("arbacacfr"));
+		System.out.println(lengthOfLongestSubstring("hkcpmprxxxqw"));
+		System.out.println(lengthOfLongestSubstring("dvdf"));
+		System.out.println(lengthOfLongestSubstring("tmmzuxt"));
+		System.out.println(lengthOfLongestSubstring("jbpnbwwd"));
+		
+	}
+	
+	public static int lengthOfLongestSubstring(String s) {
+        if(s==null||s.length()==0)
+        	return 0;
+        // 建立一个HashMap用来存放字符和位置信息
+        Map<Character,Integer> map = new HashMap<Character, Integer>();
+        int max = 0; // 用来记录最大值
+        int count = 0; // 用来统计长度
+        char[] c = s.toCharArray();
+        for(int i =0;i<c.length;i++){
+        	if(!map.containsKey(c[i])){
+        		map.put(c[i], i);
+        		count++;
+        	}else {
+        		// 若map中已经包含该字符，分为两种情况讨论
+				Integer index = map.get(c[i]);
+				// 情况1：上次出现的该字符并不在当前所统计的最长字符串中，只需要更新位置信息。并且统计count++
+				if(i-index>count){
+					count++;
+					map.put(c[i], i);
+					continue;
+				}
+				// 情况2：上次出现的该字符影响了当前最长不重复的子字符串
+				// 则更新位置信息、max变量和count计数
+				map.put(c[i], i);
+				if(count>max){
+	        		max = count;
+	        	}
+				count = i - index;
+			}
+        }
+        // 防止出现没有重复字符的情况，此时max = 0
+        return max>count?max:count;
+    }
+}
+```
+##### 结果图
+```java<br>
+LeetCode AC图：
+```
+`插入图片12`
