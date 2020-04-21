@@ -5,7 +5,12 @@
 对数组的操作，一般会要求时间复杂度和空间复杂度。所以，最常用的方法就是设置两个指针，
 分别指向不同的位置，不断调整指针指向来实现O（N）时间复杂度内实现算法。
 ```
-常见的面试题有：拼接一个最大/小的数字、合并两个有序数组、调整数组顺序使奇数位于偶数前面、查找多数元素、数组中的重复元素
+常见的面试题有：
+拼接一个最大/小的数字、
+合并两个有序数组、
+调整数组顺序使奇数位于偶数前面、
+查找多数元素、
+数组中的重复元素
 ### 面试题1：查找多数元素
 #### 题目
 ```java<br>
@@ -130,4 +135,71 @@ private boolean compare(String s1,String s2){
     }  
     return false;    
 }
+```
+
+### 面试题3：在排序数组中查找数字出现的次数
+#### 题目一：数字在排序数组中出现的次数
+```java<br>
+统计一个数字在排序数组中出现的次数。例如，输入排序数组{1,2,3,3,3,3,4,5}和数字3，由于3在这个数组中出现了4次，所以输出4.
+```
+##### 思路1
+```java<br>
+最直观的想法，遍历一遍该数组，统计出现的次数，时间复杂度为O(N)，
+可以先和面试官说一下，就说这是最直观的解法（面试官会觉得这小伙子思维比较敏捷，哈哈~）
+```
+##### 思路1代码
+```java<br>
+思路一代码：
+public int GetNumberOfK(int [] array , int k) {
+	       if(array==null||array.length==0)
+	           return 0;
+	        int count = 0;
+	        for(int i =0;i<array.length;i++){
+	            if(array[i]==k)
+	                count++;
+	        }
+	        return count;
+    }
+```
+##### 思路2
+```java<br>
+看到排序数组，必须敏锐的想到可以使用二分查找算法。
+二分算法，我们先比较中间的值和目标target的关系，然后分区间找出该数组中第一次出现目标target和最后一次出现target的位置，
+两者相减即为该目标出现的次数。整体的时间复杂度为O(logN)
+```
+##### 思路2代码
+```java<br>
+思路二代码：
+public int GetNumberOfK(int[] array , int target) {
+		if(array==null||array.length==0)
+			return 0;
+		 return getCount(array,0,array.length-1,target);
+	}
+ 
+	private int getCount(int[] array, int start, int end, int target) {
+		if(array==null||array.length==0)
+			return -1;
+		if(start>end) // 先判断start和end的关系，防止mid大于数组长度，出现空指针异常
+			return 0;
+		int mid = start+(end-start)/2;
+		int midValue = array[mid];
+		
+		if(midValue>target)
+			return getCount(array, start, mid-1, target);
+		else if (midValue<target) 
+			return getCount(array, mid+1, end, target);
+		else
+			return 1+getCount(array, start, mid-1, target)+getCount(array, mid+1, end, target);
+	}
+```
+
+#### 题目二：0~n-1中缺失的数字
+```java<br>
+一个长度为n-1的递增排序数组中的所有数字都是唯一的，并且每个数字都在范围0~n-1之内。
+在范围0~n-1范围内的n个数字中有且只有一个数字不在该数组中，请找出该数字。
+```
+#### 题目三：数组中数值和下标相等的元素
+```java<br>
+假设一个单调递增的数组里边的每个元素都是整数并且是唯一的。请实现一个函数，找出数组中任意一个数值等于其下标的元素。
+例如在数组{-3，-1,1,3,5}中，数字3和它的下标相等。
 ```
