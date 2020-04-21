@@ -455,3 +455,247 @@ right指针向前移动，直到遇到一个奇数；交换两个指针所指向
 自我总结：
 做了一些算法题，感觉只要涉及到数组，大都可以通过设置两个指针指向数组的不同位置，遍历一次数组，在O(N)的时间复杂度中得出结果。
 ```
+
+### 面试题6：数组中重复的数字
+#### 题目一
+```java<br>
+找出数组中重复的数字 (限定不可以重复数字是-1，如果没有重复数字，返回-1)
+
+在一个长度为n的数组里得所有数字都在0~n-1的范围内。数组中某些数字是重复的，
+但不知道有几个数字重复了，也不知道每个数字重复了几次。请判断。
+例如，输入长度为7的数组{2,3,1,0,2,5,3}那么对应的输出是重复的数字2或者3
+```
+##### 方法1
+```java<br>
+方法一：
+
+   /**
+	 * 方法1：先对数组排序，时间复杂度是O(NlogN)
+	 * 遍历数组，时间复杂度是O(N)
+	 * 总的时间复杂度是O(NlogN)
+	 * @param arr
+	 * @return
+	 */
+	private int duplicationInArray(int[] arr,int n){
+		// 判断输入数据的合法性
+		if(arr==null||n<=0)
+			return -1;
+		for (int i = 0; i < arr.length; i++) {
+			if(arr[i]<0||arr[i]>n-1)
+				return -1;
+		}
+		Arrays.sort(arr);
+		for (int i = 0; i < arr.length-1; i++) {
+			if(arr[i]==arr[i+1])
+				return arr[i];
+		}
+		return -1;
+	}
+```
+##### 方法2
+```java<br>
+方法二：
+
+/**
+	 * 方法2：利用Hash表来搞定，从头到尾按顺序扫描数组的每个数字，每扫描到一个数字的时候，
+	 * 用O(1)的时间来判断哈希表中是否有该数字；
+	 * 如果没有，则将其加入哈希表，反之，找到了重复数字
+	 * 时间复杂度为O(N)，但是其提高时间效率是以一个大小为O(N)的哈希表为代价。
+	 * @param arr
+	 * @return
+	 */
+	private int duplicationInArray2(int[] arr,int n){
+		// 判断输入数据的合法性
+		if(arr==null||n<=0)
+			return -1;
+		for (int i = 0; i < arr.length; i++) {
+			if(arr[i]<0||arr[i]>n-1)
+				return -1;
+		}
+		HashMap<Integer, Integer> map = new HashMap<>();
+		for (int i = 0; i < arr.length; i++) {
+			if(map.containsKey(arr[i])){
+				return arr[i];
+			}else {
+				map.put(arr[i], 1);
+			}
+		}
+		return -1;
+	}
+```
+##### 方法3
+```java<br>
+方法三：本题的最优解法：(思路很重要)
+
+/**
+	 * 方法3：下边是本题的最优解法：(思路很重要)
+	 * 思路：注意到数组中的数字都在0~n-1的范围内。如果这个数组中没有重复的数字，那么当数组排序之后数字i将
+	 * 出现在下标为i的位置，由于数组中有重复的数字，有些位置可能存在多个数字，同时有些位置可能没有数字
+	 * 
+	 * 步骤：重排数组，从头到尾依次扫描这个数组中的每个数字，当扫描到下标为i的数字时，首先比较这个数字(用m表示)
+	 * 是不是等于i。如果是，则接着扫描下一个数字；如果不是，则再拿它和第m个元素进行比较。如果他和第m个元素相等，
+	 * 则找到了重复数字；如果他和第m个数字不相等，就把第i个数字和第m个数字进行交换，把m放在属于它的位置。
+	 * 时间复杂度为O(N)，空间复杂度为O(1)
+	 * @param arr
+	 * @param n
+	 * @return
+	 */
+	private int duplicationInArray3(int[] arr,int n){
+		// 判断输入数据的合法性
+		if(arr==null||n<=0)
+			return -1;
+		for (int i = 0; i < arr.length; i++) {
+			if(arr[i]<0||arr[i]>n-1)
+				return -1;
+		}
+		for (int i = 0; i < arr.length; i++) {
+			while(arr[i]!=i){
+				if(arr[i]==arr[arr[i]]){
+					return arr[i];
+				}else {
+					// 交换位置
+					int temp = arr[i];
+					arr[i] = arr[arr[i]];
+					arr[temp] = temp;
+				}
+			}
+		}
+		return -1;
+	}
+主要学习第三种方法的思路，时间复杂度为O(N)，确实是一种优秀的算法。
+```
+###### 方法3的思路和步骤
+思路：注意到数组中的数字都在0~n-1的范围内。如果这个数组中没有重复的数字，那么当数组排序之后数字i将出现在下标为i的位置，
+由于数组中有重复的数字，有些位置可能存在多个数字，同时有些位置可能没有数字
+  
+步骤：重排数组，从头到尾依次扫描这个数组中的每个数字，当扫描到下标为i的数字时，首先比较这个数字(用m表示)是不是等于i。
+如果是，则接着扫描下一个数字；如果不是，则再拿它和第m个元素进行比较。如果他和第m个元素相等，则找到了重复数字；
+如果他和第m个数字不相等，就把第i个数字和第m个数字进行交换，把m放在属于它的位置。时间复杂度为O(N)，空间复杂度为O(1)
+
+#### 题目二
+```java<br>
+不修改数组，找出数组中重复的数字(限定不可以重复数字是-1，如果没有重复数字，返回-1)
+
+在一个长度为n+1的数组里得所有数字都在1~n的范围内。所以数组中至少有一个数字是重复的，
+请找出数组中任意一个重复的数字，但不能修改输入的数组。
+例如，输入长度为8的数组{2,3,5,4,3,2,6,7}那么对应的输出是重复的数字2或者3。
+```
+##### 方法1
+```java<br>
+方法一：
+
+    /**
+	 * 方法1：不修改数组，使用map来搞定，时间复杂度为O(N)，空间复杂度也为O(N)
+	 * @param arr
+	 * @param n
+	 * @return
+	 */
+	private static int duplicationInArray4(int[] arr,int n){
+		// 判断输入数据的合法性
+		if(arr==null||n<=0)
+			return -1;
+		for (int i = 0; i < arr.length; i++) {
+			if(arr[i]<1||arr[i]>n)
+				return -1;
+		}
+		HashMap<Integer, Integer> map = new HashMap<>();
+		for (int i = 0; i < arr.length; i++) {
+			if(map.containsKey(arr[i])){
+				return arr[i];
+			}else {
+				map.put(arr[i], 1);
+			}
+		}
+		return -1;
+	}
+
+```
+##### 方法2
+```java<br>
+方法二：
+不修改数组，新建一个长度为n+1的数组，每次都将原数组中的arr[i]复制到新数组中下标为arr[i]的位置 
+因为没有数字0，很容易发现重复数字时间复杂度为O(N)，空间复杂度也为O(N)
+
+/**
+	 * 方法2：不修改数组，新建一个长度为n+1的数组，每次都将原数组中的arr[i]复制到新数组中下标为arr[i]的位置
+	 * 因为没有数字0，很容易发现重复数字
+	 * 时间复杂度为O(N)，空间复杂度也为O(N)
+	 * @param arr
+	 * @param n
+	 * @return
+	 */
+	private static int duplicationInArray5(int[] arr,int n){
+		// 判断输入数据的合法性
+		if(arr==null||n<=0)
+			return -1;
+		for (int i = 0; i < arr.length; i++) {
+			if(arr[i]<1||arr[i]>n)
+				return -1;
+		}
+		int[] cp = new int[n+1];
+		for (int i = 0; i < arr.length; i++) {
+			if(cp[arr[i]]==0)
+				cp[arr[i]] = arr[i];
+			else
+				return arr[i];
+		}
+		return -1;
+	}
+
+```
+##### 方法3
+```java<br>
+方法三：为了减小空间复杂度，可以牺牲掉一些时间复杂度
+思路：
+二分查找的思路；将1~n的数字从中间的数字m分为了两部分，前面一半为1~m，后边一半为m+1~n。遍历数组，
+如果1~m的数字的数目超过了m，则这一半的区间肯定包含重复数字；否则另一半肯定包含重复数字。时间复杂度为O(NlogN)，空间复杂度也为O(1)
+
+/**
+	 * 方法3：为了减小空间复杂度，可以牺牲掉一些时间复杂度
+	 * 思路：二分查找的思路；将1~n的数字从中间的数字m分为了两部分，前面一半为1~m，后边一半为m+1~n。
+	 * 		遍历数组，如果1~m的数字的数目超过了m，则这一半的区间肯定包含重复数字；否则另一半肯定包含重复数字。
+	 * 时间复杂度为O(NlogN)，空间复杂度也为O(1)
+	 * @param arr
+	 * @param n
+	 * @return
+	 */
+	private static int duplicationInArray6(int[] arr,int n){
+		// 判断输入数据的合法性
+		if(arr==null||arr.length==0)
+			return -1;
+		for (int i = 0; i < arr.length; i++) {
+			if(arr[i]<1||arr[i]>n)
+				return -1;
+		}
+		int start = 1;
+		int end = n;
+		while(start<=end){ 
+			int mid = (end+start)/2;
+			int count = countRange(arr,n,start,mid);
+			if(end==start){
+				if(count>1)
+					return start;
+				else
+					break;	
+			}
+			if(count>(mid-start+1))
+				end = mid;
+			else
+				start = mid+1;
+		}
+		return -1;
+	}
+	// 统计区间内的数字出现的次数
+	private static int countRange(int[] arr, int n, int start, int end) {
+		if(arr==null||n<=0)
+			return 0;
+		int count = 0;
+		for (int i = 0; i < arr.length; i++) {
+			if(arr[i]>=start&&arr[i]<=end)
+				count++;
+		}
+		return count;
+	}
+上述基于二分查找的算法不能保证找出所有重复的数字，例如该算法不能找出数组{2,3,5,4,3,2,6,7}中重复的数字2.
+这是因为在1~2的范围里有1和2两个数字，这个范围的数字也出现了2次，此时该算法不能确定是每个数字各出现一次还是某个数字出现了两次。
+```
