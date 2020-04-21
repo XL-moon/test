@@ -184,9 +184,167 @@ class MyStack<E>{
 `如果是使用一个队列来实现栈，可以使用双端队列`
 
 ### 自定义实现堆栈
+#### 堆栈定义
+```java<br>
 堆栈（Stack）是一种常见的数据结构，符合后进先出（First In Last Out）原则，通常用于实现对象存放顺序的逆序。
 栈的基本操作有push（添加到堆栈）,pop（从堆栈删除）,peek（检测栈顶元素且不删除）。
+```
+#### 实现方式1
+使用一个队列实现
+可以使用LinkedList或者ArrayDeque实现，主要是实现其常用的push、pop以及peek方法。
+```java<br>
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.LinkedList;
+ 
+public class MyStackTest{
+	public static void main(String[] args) {
+		MyStack<Integer> stack = new MyStack<Integer>();
+		// 将0、1、2、3、4存入堆栈stack
+		for (int i = 0; i < 5; i++) {
+			stack.push(i);
+		}
+		System.out.println("After pushing 5 elements: " + stack);
+		int m = stack.pop();
+		System.out.println("Popped element = " + m);
+		
+		System.out.println("After popping 1 element : " + stack);
+		int n = stack.peek();
+		System.out.println("Peeked element = " + n);
+		System.out.println("After peeking 1 element : " + stack);
+	}
+}
+class MyStack<T> {
+//	private Deque<Integer> queue = new ArrayDeque<Integer>();
+	private Deque<Integer> queue = new LinkedList<Integer>();
+    // push存入元素
+	public void push(Integer element) {
+		queue.addFirst(element);
+	}
+	// pop取出元素
+	public Integer pop() {
+		return queue.removeFirst();
+	}
+    // peek获取元素，但是并不取出元素
+	public Integer peek() {
+		return queue.getFirst();
+	}
+ 
+	public String toString() {
+		return queue.toString();
+	}
+ 
+}
+LinkedList:特有方法：
+addFirst();
+addLast();
 
+getFirst();
+getLast();
+获取元素，但不删除元素。如果集合中没有元素，会出现NoSuchElementException
+
+removeFirst();
+removeLast();
+获取元素，但是元素被删除。如果集合中没有元素，会出现NoSuchElementException
+
+在JDK1.6出现了替代方法。
+offerFirst();
+offerLast();
+
+peekFirst();
+peekLast();
+获取元素，但不删除元素。如果集合中没有元素，会返回null。
+
+pollFirst();
+pollLast();
+获取元素，但是元素被删除。如果集合中没有元素，会返回null
+```
+
+#### 实现方式2
+使用int数组来实现
 ```java<br>
 
+public class StackTest{
+	public static void main(String[] args) {
+		Stack2 stack = new Stack2();
+		// 将0、1、2、3、4存入堆栈stack
+		for (int i = 0; i < 5; i++) {
+			stack.push(i);
+		}
+		System.out.println("After pushing 5 elements: " + stack);
+		int m = stack.pop();
+		int m1 = stack.pop();
+		int m2 = stack.pop();
+		int m3 = stack.pop();
+		System.out.println("Popped element = " + m3);
+		
+		System.out.println("After popping 1 element : " + stack);
+		int n = stack.peek();
+		System.out.println("Peeked element = " + n);
+		System.out.println("After peeking 1 element : " + stack);
+	}
+}
+class Stack2 {
+    /**
+     * 栈的最大深度
+     **/
+    protected int MAX_DEPTH = 10;
+ 
+    /**
+     * 栈的当前深度
+     */
+    protected int depth = 0;
+ 
+    /**
+     * 实际的栈
+     */
+    protected int[] stack = new int[MAX_DEPTH];
+ 
+    /**
+     * push，向栈中添加一个元素
+     *
+     * @param n 待添加的整数
+     */
+    protected void push(int n) {
+        if (depth == MAX_DEPTH - 1) {
+            throw new RuntimeException("栈已满，无法再添加元素。");
+        }
+        stack[depth++] = n;
+    }
+ 
+    /**
+     * pop，返回栈顶元素并从栈中删除
+     *
+     * @return 栈顶元素
+     */
+    protected int pop() {
+        if (depth == 0) {
+            throw new RuntimeException("栈中元素已经被取完，无法再取。");
+        }
+ 
+        // --depth，dept先减去1再赋值给变量dept，这样整个栈的深度就减1了（相当于从栈中删除）。
+        return stack[--depth];
+ 
+    }
+ 
+    /**
+     * peek，返回栈顶元素但不从栈中删除
+     *
+     * @return
+     */
+    protected int peek() {
+        if (depth == 0) {
+            throw new RuntimeException("栈中元素已经被取完，无法再取。");
+        }
+        return stack[depth - 1];
+    }
+    
+    @Override
+    public String toString() {
+    	// TODO Auto-generated method stub
+    	return stack.toString();
+    }
+}
+这种实现方式有个问题，在pop方法中，只是单纯的移动了指针，相当于从堆栈中删除了该元素，其实并没有做到真正删除。虽然也可以实现简单的堆栈功能，但会产生如图所示的现象：
 ```
+`插入图片6`
