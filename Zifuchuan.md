@@ -102,7 +102,7 @@ public static int myAtoi(String str) {
 4.最长公共前缀
 5.最长不含重复元素的子串
 
-#### 最长公共子序列
+#### 1.最长公共子序列
 ```java<br>
 子序列不需要连续，给定两个不同长度的字符串，如何求出最长公共子序列？
 ```
@@ -150,4 +150,119 @@ int getLCS(String str, String str2){
 画图分析，最长公共子序列：
 若对应位置字符相等，则可以这样表示：
 ```
-`插入图片`
+`插入图片7`
+```java<br>
+反之，若不相等，则表示如下：
+```
+`插入图片8`
+递归和非递归的区别是，非递归方法中将结果保存在数组中。
+
+#### 2.最长公共子串
+```java<br>
+/**
+	 * 最长公共子串
+	 * @param str1
+	 * @param str2
+	 * @return
+	 */
+	int longestPublicSubstring(String str1, String str2){
+		int l1 = str1.length();
+		int l2 = str2.length();
+		int[][] val = new int[l1][l2];
+		for(int i = 0; i < l1; i++){
+			for(int j = 0; j < l2; j++){
+				if(str1.charAt(i) == str2.charAt(j)){
+					if(i >= 1 && j >= 1){
+						val[i][j] = val[i - 1][j - 1] + 1;
+					}else{
+						val[i][j] = 1;
+					}
+				}else{
+					val[i][j] = 0;
+				}
+			}
+		}
+		// 找到val数组中的最大值
+		int max = 0;
+		for(int i = 0; i < l1; i++){
+			for(int j = 0; j < l2; j++){
+				max = Math.max(val[i][j], max);				
+			}
+		}
+		return max;
+	}
+画图分析：
+```
+`插入图片9`
+
+
+#### 3.最长递增子序列
+```java<br>
+这是一道典型的动态规划试题。使用memo[ ]数组保存中间结果
+/**
+	 * 最长递增子序列 动态规划
+	 * @param num
+	 * @return
+	 */
+	public static int LongestLIS(int[] num){
+		if(num.length<1)
+			return 0;
+		// 定义一个memo数组memo[i]表示以num[i]结尾的序列的长度-1
+		int[] memo = new int[num.length];
+		for(int i = 1;i<num.length;i++){
+			for(int j = 0;j<i;j++){
+				if(num[i]>num[j]){
+					memo[i] = Math.max(memo[i], 1+memo[j]);
+				}
+			}
+		}
+		// 遍历memo数组，找到最大值，并且返回max+1;
+		int max = 0;
+		for (int i = 0; i < memo.length; i++) {
+			max = Math.max(max, memo[i]);
+		}
+		return max+1;
+	}
+```
+
+#### 4.最长公共前缀
+```java<br>
+/*
+ * 求一个字符串数组的最长公共前缀
+ * Write a function to find the longest common prefix string amongst an array of strings.
+ */
+public class Main {
+     public static void main(String[] args) {
+          String[] s = {"acvxx","axc","aaa"};
+          System.out.println(longestCommonPrefix(s));
+     }
+     public static String longestCommonPrefix(String[] strs) {
+          if(strs == null || strs.length == 0)   
+              return "";
+         String pre = strs[0];
+         int i = 1;
+         while(i < strs.length){
+             while(strs[i].indexOf(pre) != 0)  // 字符串String的indexOf方法使用
+                 pre = pre.substring(0,pre.length()-1);
+             i++;
+         }
+         return pre;
+    }
+}
+该方法巧妙之处就是充分利用了indexOf( )方法，先将数组中的第一个元素作为最长前缀，然后向后遍历数组，判断是否是后边字符串的前缀，若不是，则从后边减小该前缀，直到最后前缀为“”。
+
+```
+#### 5.最长不含重复元素的子串
+##### 题目
+`插入图片10`
+##### 解题分析
+```java<br>
+题目的大意是说：请从字符串中找出一个最长的不包含重复字符的子字符串，计算该最长子字符串的长度。假设该字符串中只包含‘a’-'z'的字符。
+打开tag瞅瞅，如下：
+```
+`插入图片11`
+
+于是我们使用了HashMap和双指针来解决该问题。
+思路：HashMap中不断更新维护每个字符出现的位置。使用count变量进行计数，当统计的最长子字符串被重复字符破坏时，比较count和max的大小，判断是否需要更新max变量。
+总结：不管是哪种情况，每次都需要更新map中的信息，并且需要更新count变量
+```java<br>
