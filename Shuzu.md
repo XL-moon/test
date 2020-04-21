@@ -361,3 +361,97 @@ public class Main {
 	}
 }
 ```
+
+### 面试题5：调整数组顺序使奇数位于偶数前面
+#### 题目一
+```java<br>
+输入一个整数数组，实现一个函数来调整该数组中数字的顺序，
+使得所有奇数位于数组的前半部分，所有偶数位于数组的后半部分。
+```
+##### 思路
+```java<br>
+思路：使用双指针，left和right；left从前往后移动，直到遇到偶数；
+right指针向前移动，直到遇到一个奇数；交换两个指针所指向的元素。
+```
+##### 代码
+```java<br>
+
+/**
+	 * 可以满足奇数位于偶数前面的算法，但是奇数和奇数、偶数和偶数的相对位置不能保证。
+	 * 时间复杂度O(N)，空间O(1)
+	 * @param arr
+	 */
+	private static void reOrderArray(int[] arr){
+		if(arr==null||arr.length<2)
+			return ;
+		int left = 0;
+		int right = arr.length-1;
+		while(left<right){
+			while((arr[left]&1)==1){
+				left++;
+			} 
+			while((arr[right]&1)==0){
+				right--;
+			}
+			// 如果不加此处的if判断语句，会导致right已经在left前面了，但是依然进行了交换。
+			// 即将已经在前面的奇数和后面的偶数进行了置换！！！
+			if(left<right){
+				int temp = arr[left];
+				arr[left] = arr[right];
+				arr[right] = temp;
+			}
+		}
+	}
+```
+#### 扩展题
+```java<br>
+扩展：输入一个整数数组，实现一个函数来调整该数组中数字的顺序，
+使得所有的奇数位于数组的前半部分，所有的偶数位于位于数组的后半部分，
+并保证奇数和奇数，偶数和偶数之间的相对位置不变
+```
+##### 思路
+```java<br>
+首先统计奇数的个数；新建一个等长数组；设置两个指针；遍历旧数组，将各个元素填入新数组中；将新数组赋值给旧数组
+```
+##### 代码
+```java<br>
+/**
+	 * 输入一个整数数组，实现一个函数来调整该数组中数字的顺序，使得所有的奇数位于数组的前半部分，
+	 * 所有的偶数位于位于数组的后半部分，并保证奇数和奇数，偶数和偶数之间的相对位置不变。
+	 * 时间复杂度O(N),空间复杂度O(N)
+	 * @param arr
+	 */
+	private static void reOrderArray2(int[] arr){
+		if(arr==null||arr.length<2)
+			return ;
+		int count = 0;
+		// 统计数组中奇数的个数
+		for (int i = 0; i < arr.length; i++) {
+			if((arr[i]&1)==1){
+				count++;
+			}
+		}
+		// 新建一个等长数组
+		int[] newArr = new int[arr.length];
+		// 设置两个指针，指向新数组
+		int left = 0;
+		int right = count;
+		// 遍历旧数组，将元素移入新数组
+		for (int i = 0; i < arr.length; i++) {
+			if((arr[i]&1)==1)
+				newArr[left++] = arr[i];
+			else
+				newArr[right++] = arr[i];
+		}
+		// 新数组代替旧数组
+		for(int i = 0; i < newArr.length; i++) {
+			arr[i] = newArr[i];
+		}
+		
+	}
+```
+#### 自我总结
+```java<br>
+自我总结：
+做了一些算法题，感觉只要涉及到数组，大都可以通过设置两个指针指向数组的不同位置，遍历一次数组，在O(N)的时间复杂度中得出结果。
+```
