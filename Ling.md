@@ -1154,5 +1154,215 @@ class Node{
 
 ```
 `插入图片1`
-#### 
+### 3.以K个为一组反转单链表，最后不足K个节点的部分不反转
+#### 例题
+`插入图片2`
+#### 解题思路
 ```java<br>
+思路：核心代码还是反转常规的单链表，不过此题需要加上节点数量的判断，当节点数目不足K个时，不进行反转操作，直接返回。
+```
+#### 代码
+```java<br>
+
+/**
+	 * 分组反转单链表，最后不足K个节点的部分不反转
+	 * @param head
+	 * @param k
+	 * @return
+	 */
+	public static ListNode reverseKgroups(ListNode head, int k) {
+		if (head == null)
+			return head;
+		ListNode cur = head;
+		ListNode reHead = null;
+ 
+		int count = 0;
+		if (getSize(cur) >= k) {
+			/* Reverse first k nodes of linked list */
+			while (count < k && cur != null) {
+				ListNode reCur = cur;
+				cur = cur.next;
+				reCur.next = reHead;
+				reHead = reCur;
+				count++;
+			}
+			/*
+			 * cur is now a pointer to (k+1)th node Recursively call for the
+			 * list starting from current. And make rest of the list as next of
+			 * first node
+			 */
+			if (cur != null)
+				head.next = reverseKgroups(cur, k);
+			return reHead;
+		}
+		return cur;
+	}
+统计节点数目函数如下：
+
+/**
+	 * 统计该节点之后的节点数量
+	 * @param head
+	 * @return
+	 */
+	public static int getSize(ListNode head) {
+		int count = 0;
+		ListNode curNode = head;
+		while (curNode != null) {
+			count++;
+			curNode = curNode.next;
+		}
+		return count;
+	}
+
+```
+#### 结果
+```java<br>
+AC结果如下：
+```
+`插入图片3`
+
+### 4.总结
+```java<br>
+总结：
+       各个形式的反转单链表，最重要的理清楚head、reHead和cur三个节点的关系，通过核心代码和方法的递归来实现分组反转。
+附上完整代码：
+
+public class Main {
+	public static void main(String[] args) {
+		ListNode head = new ListNode(3);
+		ListNode node1 = new ListNode(5);
+		ListNode node2 = new ListNode(6);
+		ListNode node3 = new ListNode(9);
+		ListNode node4 = new ListNode(7);
+		ListNode node5 = new ListNode(2);
+		ListNode node6 = new ListNode(1);
+		ListNode node7 = new ListNode(12);
+		head.next = node1;
+		node1.next = node2;
+		node2.next = node3;
+		node3.next = node4;
+		node4.next = node5;
+		node5.next = node6;
+		node6.next = node7;
+		printList(head);
+//		printList(reverseNode(head));
+//		printList(reverseKgroups(head, 3));
+		printList(reverseKgroup(head, 3));
+ 
+	}
+ 
+	// 打印链表的方法，方便test函数
+	public static void printList(ListNode head) {
+		while (head != null) {
+			System.out.print(head.val + " ");
+			head = head.next;
+		}
+		System.out.println();
+	}
+	/**
+	 * 分组反转单链表，最后不足K个节点的部分不反转
+	 * @param head
+	 * @param k
+	 * @return
+	 */
+	public static ListNode reverseKgroups(ListNode head, int k) {
+		if (head == null)
+			return head;
+		ListNode cur = head;
+		ListNode reHead = null;
+ 
+		int count = 0;
+		if (getSize(cur) >= k) {
+			/* Reverse first k nodes of linked list */
+			while (count < k && cur != null) {
+				ListNode reCur = cur;
+				cur = cur.next;
+				reCur.next = reHead;
+				reHead = reCur;
+				count++;
+			}
+			/*
+			 * cur is now a pointer to (k+1)th node Recursively call for the
+			 * list starting from current. And make rest of the list as next of
+			 * first node
+			 */
+			if (cur != null)
+				head.next = reverseKgroups(cur, k);
+			return reHead;
+		}
+		return cur;
+	}
+ 
+	/**
+	 * 分组反转单链表，最后不足K个节点的部分也反转
+	 * @param head
+	 * @param k
+	 * @return
+	 */
+	public static ListNode reverseKgroup(ListNode head, int k) {
+		if (head == null)
+			return head;
+		ListNode cur = head;
+		ListNode reHead = null;
+ 
+		int count = 0;
+		/* Reverse first k nodes of linked list */
+		while (count < k && cur != null) {
+			ListNode reCur = cur;
+			cur = cur.next;
+			reCur.next = reHead;
+			reHead = reCur;
+			count++;
+		}
+		/*
+		 * cur is now a pointer to (k+1)th node Recursively call for the
+		 * list starting from current. And make rest of the list as next of
+		 * first node
+		 */
+		if (cur != null)
+			head.next = reverseKgroup(cur, k);
+		
+		return reHead;
+	}
+	/**
+	 * 统计该节点之后的节点数量
+	 * @param head
+	 * @return
+	 */
+	public static int getSize(ListNode head) {
+		int count = 0;
+		ListNode curNode = head;
+		while (curNode != null) {
+			count++;
+			curNode = curNode.next;
+		}
+		return count;
+	}
+ 
+ 
+	/*
+	 * 翻转链表（遍历） 从头到尾遍历原链表，每遍历一个结点， 将其摘下放在新链表的最前端。 注意链表为空和只有一个结点的情况。时间复杂度为O（n）
+	 */
+	public static ListNode reverseNode(ListNode head) {
+		// 如果链表为空或只有一个节点，无需反转，直接返回原链表表头
+		if (head == null || head.next == null)
+			return head;
+ 
+		ListNode reHead = null;
+		ListNode cur = head;
+		while (cur != null) {
+			ListNode reCur = cur; // 用reCur保存住对要处理节点的引用
+			cur = cur.next; // cur更新到下一个节点
+			reCur.next = reHead; // 更新要处理节点的next引用
+			reHead = reCur; // reHead指向要处理节点的前一个节点
+		}
+		return reHead;
+	}
+ 
+}
+class ListNode {
+      int val;
+      ListNode next;
+      ListNode(int x) { val = x; }
+}
+```
