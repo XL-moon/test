@@ -203,3 +203,161 @@ public int GetNumberOfK(int[] array , int target) {
 假设一个单调递增的数组里边的每个元素都是整数并且是唯一的。请实现一个函数，找出数组中任意一个数值等于其下标的元素。
 例如在数组{-3，-1,1,3,5}中，数字3和它的下标相等。
 ```
+
+### 面试题4：数组中数字出现的次数
+#### 题目一
+```java<br>
+在一个数组中除了一个数字只出现一次之外，其他数字都出现了2次，请找出那个只出现了一次的数字。
+要求：线性时间复杂度O(N)，空间复杂度为O(1)
+```
+##### 思路
+```java<br>
+思路：用位运算来解决XOR异或来解决该问题。由于两个相同的数字的异或结果是0，
+我们可以把数组中的所有数字进行异或操作，结果就是唯一出现的那个数字。
+```
+##### 代码
+```java<br>
+public int singleNumber(int[] nums) {
+        int ans =0;
+    
+        int len = nums.length;
+        for(int i=0;i!=len;i++)
+            ans ^= nums[i];
+    
+        return ans;
+ 
+    }
+```
+#### 题目二
+```java<br>
+在一个数组中除了一个数字只出现一次之外，其他数字都出现了3次，请找出那个只出现了一次的数字。
+要求：线性时间复杂度O(N)，空间复杂度为O(1)
+```
+##### 思路
+```java<br>
+思路：三个相同的数字异或之后还是本身。转换思路：如果一个数字出现三次，
+那么他的二进制表示的每一位(0或者1)也出现3次。如果把所有出现3次的数字的二进制表示的每一位都分别相加起来，那么每一位的和都能被3整除！！！
+```
+##### 代码
+```java<br>
+java代码如下：
+
+/**
+ * 题目：数组中唯一只出现一次的数字
+ * 在一个数组中除了一个数字只出现一次之外，其他数字都出现了3次，请找出那个只出现了一次的数字。
+ * 要求：线性时间复杂度O(N)，空间复杂度为O(1)
+ * @author ywq
+ *
+ *
+ */
+public class Main {
+	public static void main(String[] args) {
+		int[] nums = {2,3,3,3,4,4,4};
+		System.out.println(singleNumber(nums));
+	}
+	public static int singleNumber(int[] nums) {
+		// bitSum数组用来存储二进制加和之后各位的值
+        int bitSum[] = new int[32];
+        
+        for(int i =0;i<nums.length;i++){
+            int bitMask = 1;
+            for(int j = 31;j>=0;j--){
+                int bit = nums[i]&bitMask;
+                if(bit!=0)
+                    bitSum[j]+=1;
+                bitMask = bitMask<<1;
+            }
+        }
+        // 得出result
+        int result = 0;
+        for(int i = 0;i<32;i++){
+            result = result<<1;
+            result +=bitSum[i]%3;
+        }
+        return result;
+    }
+}
+该算法的时间复杂度为O(N)，因为内层循环和后边的循环都是常数级别的时间复杂度。
+空间复杂度O(1)，因为数组长度为32的是常数级别的。
+```
+#### 题目三：数组中唯一出现一次的两个数字（medium）
+```java<br>
+在一个数组中除了2个数字只出现一次之外，其他数字都出现了2次，请找出两个只出现了一次的数字。
+要求：线性时间复杂度O(N)，空间复杂度为O(1)
+```
+##### 思路
+```java<br>
+思路：从头到尾异或数组中的每个数字，可以得到只出现1次的两个数字的异或结果。
+从异或结果中，找到右边开始第一个不为0的位数，记为n。我们将数组中所有的数字，
+按照第n位是否为0，分为两个数组。每个子数组中都包含一个只出现一次的数字，其它数字都是两两出现在各个子数组中。
+那么结合题目一，我们已经得出了答案。
+
+举例：假设输入数组{2,4,3,6,3,2,5,5} 异或结果为0010，我们按照倒数第二位是否为1将数组分为了两组，
+即{2,3,6,3,2}和数组{4,5,5}接下来只需要按照题目一中的方法即可求出这两个数。
+```
+##### 代码
+```java<br>
+
+/**
+ * 题目：数组中唯一只出现一次的两个数字
+ * 在一个整型数组中除了两个数字只出现一次之外，其他数字都出现了2次，请找出这两个只出现了一次的数字。
+ * 要求：线性时间复杂度O(N)，空间复杂度为O(1)
+ * @author ywq
+ *
+ *
+ */
+public class Main {
+	public static void main(String[] args) {
+		int[] nums = {2,3,3,4,4,5,5,7};
+		int[] number = singleNumber(nums);
+		for (int i : number) {
+			System.out.println(i);
+		}
+	}
+	public static int[] singleNumber(int[] nums) {
+		
+		int ans = 0;
+		// 得到数组中所有元素的异或结果
+		for(int i = 0;i<nums.length;i++){
+			ans^=nums[i];
+		}
+		int index = findFirstBitIs1(ans);
+		
+		int first = 0;
+		int second = 0;
+		for(int j = 0;j<nums.length;j++){
+			if(isBit1(nums[j],index)){
+				first ^= nums[j];
+			}else {
+				second ^= nums[j];
+			}
+		}
+		
+		int[] result = {first,second};
+		return result;
+    }
+	/**
+	 * 判断num的从右边算起的第index位是否为1
+	 * @param num
+	 * @param index
+	 * @return
+	 */
+	private static boolean isBit1(int num, int index) {
+		num = num>>index;
+		return (num&1)==1?true:false;
+	}
+	/**
+	 * 得到一个数字num的最右边为1的位数
+	 * @param num
+	 * @return
+	 */
+	private static int findFirstBitIs1(int num) {
+		int index = 0;
+		while((num&1)==0){
+			num = num>>1;
+			index++;
+		}
+		return index;
+	}
+}
+```
