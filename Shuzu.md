@@ -1,59 +1,133 @@
-## 字符串相关算法
-### 字符串简介
+## 数组相关算法
+### 数组简介
 ```java<br>
-字符串是一种非常常见的数据类型，我们应当对API中常用的函数进行一定的学习和了解。
-在字符串的考察中，比较经典的是自定义一个函数实现字符串转整数的功能；
-加大难度之后，会考察以下常见的5种关于字符串中“最长”问题：
-1.最长公共子序列
-2.最长公共子串
-3.最长递增子序列
-4.最长公共前缀
-5.最长不含重复元素的子串
+数组也是一种极其常见的数据结构，在面试中和数组相关的算法题出现频率贼高。
+对数组的操作，一般会要求时间复杂度和空间复杂度。所以，最常用的方法就是设置两个指针，
+分别指向不同的位置，不断调整指针指向来实现O（N）时间复杂度内实现算法。
 ```
-### 面试题
+常见的面试题有：拼接一个最大/小的数字、合并两个有序数组、调整数组顺序使奇数位于偶数前面、查找多数元素、数组中的重复元素
+### 面试题1：查找多数元素
 #### 题目
 ```java<br>
-自定义一个函数，实现字符串转换成整数。
+找出一个数组中占50%以上的元素，即寻找多数元素，并且多数元素是一定存在的假设。
 ```
-#### 解题分析
+##### 思路1
 ```java<br>
-分析：
-这道题看似简单，而且面试官也没有提醒你应该注意哪些。但是！！，这道题的目的就是为了考察你的特殊情况处理能力，
-你能不能想到会有哪些特殊情况或者边界处理，这才是本题的重点。
-那么，遇到这道题，我们应该如何面对？我们要不慌不乱的和面试官亲切交谈，制定该函数的一些规则，即如何处理异常输入等，
-之后，再遍历数组，根据需求进行相应的异常处理哦~
+思路1：将数组排序，则中间的那个元素一定是多数元素
 
+public int majorityElement(int[] nums) {  
+    Arrays.sort(nums);  
+    return nums[nums.length/2];  
+}  
+该代码的时间复杂度为O（NlogN），面试官会问你能不能进行优化时间复杂度？
+```
+##### 思路2
+```java<br>
+思路2：利用HashMap来记录每个元素的出现次数
+
+public int majorityElement(int[] nums) {  
+    HashMap<Integer, Integer> map = new HashMap<>();  
+ 
+    for (int i = 0; i < nums.length; i++) {  
+        if(!map.containsKey(nums[i])){  
+            map.put(nums[i], 1);  
+        }else {  
+            int values = map.get(nums[i]);  
+            map.put(nums[i], ++values);  
+        }  
+    }  
+    int n = nums.length/2;  
+    Set<Integer> keySet = map.keySet();  
+    Iterator<Integer> iterator = keySet.iterator();  
+    while(iterator.hasNext()){  
+        int key = iterator.next();  
+        int value = map.get(key);  
+        if (value>n) {  
+            return key;  
+        }  
+    }  
+    return 0;  
+ 
+}  
+该代码的时间复杂度为O（N），空间复杂度为O（N）。面试官还不满意，问你能不能用O（N）+O（1）实现该算法？
+```
+##### 思路3
+```java<br>
+思路3：Moore voting algorithm--每找出两个不同的element，就成对删除即count--，最终剩下的一定就是所求的。
+
+public int majorityElement(int[] nums) {  
+      int elem = 0;  
+      int count = 0;   
+      for(int i = 0; i < nums.length; i++)  {      
+         if(count == 0)  {  
+             elem = nums[i];  
+             count = 1;  
+         }  
+         else    {  
+             if(elem == nums[i])  
+                 count++;  
+             else  
+                 count--;  
+         }  
+ 
+     }  
+     return elem;       
+}  
+```
+
+### 面试题2：查把数组排成最小的数
+#### 题目
+```java<br>
+输入一个正整数数组，把数组里所有数字拼接起来排成一个数，打印能拼接出的所有数字中最小的一个。
+例如输入数组{3，32，321}，则打印出这三个数字能排成的最小数字为321323
+```
+#### 思路
+```java<br>
 思路：
-首先，我们应该要想到本题的一些特殊情况。
-本题的特殊情况如下：
-1.能够排除首部的空格，从第一个非空字符开始计算
-2.允许数字以正负号(+-)开头
-3.遇到非法字符便停止转换，返回当前已经转换的值，如果开头就是非 法字符则返回0
-4.在转换结果溢出时返回特定值，这里是最大/最小整数
-5.我们需要针对以上的特殊情况和面试官亲切交流，询问如果有特殊情况该如何处理。
+我们需要定义一种新的比较大小规则，数组根据这个规则可以排成一个最小的数字。
 
-其次，我们要想到一些测试用例，根据测试用例来询问面试官输出是否应该为XX。
-先来几组测试用例：
+排序规则：
+两个数字m和n，我们比较mn和nm的大小，来确定在新的比较规则下n和m的大小关系，来确定哪个应该排在前面
 
-"    010"
-"    +004500"
-"  -001+2a42"
-"   +0 123"
-"-2147483648"
-"2147483648"
-"   - 321"
-"      -11919730356x"
-"9223372036854775809"
-
-以上的测试用例对应的正确输出如下：
-10
-4500
--1
-0
--2147483648
-2147483647
-0
--2147483648
-2147483647
-如果你能想到这些特殊情况和测试用例，那么恭喜你，你已经成功了90%，面试官会从心底里开始欣赏你。
+步骤：
+将整型数组转换为String数组。在新的规则下对数组进行排序（本例使用了选择排序）。
+```
+#### 代码
+```java<br>
+public String PrintMinNumber(int [] num) {  
+    if(num==null||num.length==0)  
+        return "";  
+    int len = num.length;  
+    String[] str = new String[len];  
+    for(int i = 0; i < len; i++){  
+        str[i] = String.valueOf(num[i]);  
+    }  
+    for (int i = 0; i < str.length; i++) {  
+        for (int j = i+1; j < str.length; j++) {  
+            if(compare(str[i], str[j])){  
+                String temp = str[j];  
+                str[j] = str[i];  
+                str[i] = temp;  
+            }  
+        }  
+    }  
+    StringBuilder sb = new StringBuilder();  
+    for(int i = 0;i<str.length;i++){  
+        sb = sb.append(str[i]);  
+    }  
+    return sb.toString();  
+ 
+}  
+private boolean compare(String s1,String s2){  
+    int len = s1.length()+s2.length();  
+    String str1 = s1+s2;  
+    String str2 = s2+s1;  
+    for (int i = 0; i < len; i++) {  
+        if(Integer.parseInt(str1.substring(i,i+1))>Integer.parseInt(str2.substring(i,i+1)))  
+            return true;  
+        if(Integer.parseInt(str1.substring(i,i+1))<Integer.parseInt(str2.substring(i,i+1)))  
+            return false;  
+    }  
+    return false;    
+}
 ```
